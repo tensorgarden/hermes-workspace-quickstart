@@ -1,0 +1,38 @@
+export interface WorkspaceConfig {
+  name: string;
+  description: string;
+  provider: string;
+  model: string;
+  skills: string[];
+  memory: boolean;
+  cron: string[];
+  plugins: string[];
+}
+
+export interface SkillDefinition {
+  name: string;
+  description: string;
+  category: "productivity" | "development" | "data" | "communication";
+  tools: string[];
+  triggers: string[];
+}
+
+export interface AgentProfile {
+  name: string;
+  description: string;
+  systemPrompt: string;
+  skills: string[];
+  provider: string;
+  model: string;
+  temperature: number;
+  maxTokens: number;
+}
+
+export interface ProviderConfig {
+  name: string;
+  type: "local" | "cloud";
+  endpoint: string;
+  models: string[];
+  requiresApiKey: boolean;
+  setupCommand: string;
+}
