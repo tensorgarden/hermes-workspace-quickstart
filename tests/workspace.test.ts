@@ -22,6 +22,17 @@ describe("Provider Configs", () => {
     const localProviders = demoProviders.filter((p) => p.type === "local");
     for (const p of localProviders) {
       expect(p.requiresApiKey).toBe(false);
+      expect(p.secretHandling).toBe("none");
+    }
+  });
+
+  it("cloud providers document safe runtime secret handling", () => {
+    const cloudProviders = demoProviders.filter((p) => p.type === "cloud");
+    for (const p of cloudProviders) {
+      expect(p.requiresApiKey).toBe(true);
+      expect(p.secretHandling).not.toBe("none");
+      expect(p.setupCommand).not.toMatch(/sk-[A-Za-z0-9]/);
+      expect(p.securityNotes.join(" ")).toMatch(/runtime|repo|log/i);
     }
   });
 

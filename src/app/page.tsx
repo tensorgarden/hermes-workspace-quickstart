@@ -152,7 +152,8 @@ hermes init`}</CodeBlock>
                   <th className="py-2 pr-4 font-semibold text-ink">Name</th>
                   <th className="py-2 pr-4 font-semibold text-ink">Type</th>
                   <th className="py-2 pr-4 font-semibold text-ink">Models</th>
-                  <th className="py-2 font-semibold text-ink">API Key</th>
+                  <th className="py-2 pr-4 font-semibold text-ink">API Key</th>
+                  <th className="py-2 font-semibold text-ink">Secret Handling</th>
                 </tr>
               </thead>
               <tbody>
@@ -175,8 +176,11 @@ hermes init`}</CodeBlock>
                     <td className="py-2 pr-4 text-slate-600">
                       {p.models.join(", ")}
                     </td>
-                    <td className="py-2 text-slate-600">
+                    <td className="py-2 pr-4 text-slate-600">
                       {p.requiresApiKey ? "Yes" : "No"}
+                    </td>
+                    <td className="py-2 text-slate-600">
+                      {p.secretHandling.replace("-", " ")}
                     </td>
                   </tr>
                 ))}
@@ -226,6 +230,31 @@ providers:
     models:
       - gpt-4o
       - gpt-4o-mini`}</CodeBlock>
+
+          <h3 className="text-lg font-semibold text-ink mt-6 mb-3">
+            Secret Safety Guardrails
+          </h3>
+          <p className="text-slate-600 leading-relaxed mb-4">
+            Current AI-agent deployments increasingly trip over leaked API keys:
+            environment dumps, crash reports, and verbose tool logs can expose
+            secrets. For cloud providers, keep keys outside the repository and
+            inject them only when the agent process starts.
+          </p>
+          <div className="space-y-3">
+            {demoProviders.map((p) => (
+              <div key={p.name} className="rounded-lg border border-slate-200 p-3">
+                <div className="text-sm font-semibold text-ink">{p.name}</div>
+                <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                  {p.securityNotes.map((note) => (
+                    <li key={note} className="flex gap-2">
+                      <span className="text-emerald-500">&#10003;</span>
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </Card>
 
         {/* --- Workspace Management --- */}

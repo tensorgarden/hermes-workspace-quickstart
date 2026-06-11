@@ -34,5 +34,7 @@ export interface ProviderConfig {
   endpoint: string;
   models: string[];
   requiresApiKey: boolean;
+  secretHandling: "none" | "environment-variable" | "runtime-injection";
+  securityNotes: string[];
   setupCommand: string;
 }

@@ -7,6 +7,11 @@ export const demoProviders: ProviderConfig[] = [
     endpoint: "http://localhost:11434",
     models: ["llama3.2", "mistral", "deepseek-r1:8b", "codellama"],
     requiresApiKey: false,
+    secretHandling: "none",
+    securityNotes: [
+      "No API key is required for local inference.",
+      "Bind the Ollama endpoint to localhost unless remote access is explicitly needed.",
+    ],
     setupCommand: "curl -fsSL https://ollama.com/install.sh | sh",
   },
   {
@@ -15,6 +20,11 @@ export const demoProviders: ProviderConfig[] = [
     endpoint: "http://localhost:1234/v1",
     models: ["llama-3.2-3b-instruct", "mistral-7b-instruct-v0.3"],
     requiresApiKey: false,
+    secretHandling: "none",
+    securityNotes: [
+      "Keep the local server bound to localhost for private workspaces.",
+      "Disable sharing mode before loading proprietary prompts or documents.",
+    ],
     setupCommand: "# Download from https://lmstudio.ai",
   },
   {
@@ -23,7 +33,12 @@ export const demoProviders: ProviderConfig[] = [
     endpoint: "https://api.openai.com/v1",
     models: ["gpt-4o", "gpt-4o-mini"],
     requiresApiKey: true,
-    setupCommand: "export OPENAI_API_KEY=sk-...",
+    secretHandling: "environment-variable",
+    securityNotes: [
+      "Store the API key outside the repo in the Hermes env file or a secret manager.",
+      "Avoid logging environment dumps because crash reports can expose secrets.",
+    ],
+    setupCommand: "# Add OPENAI_API_KEY to $(hermes config env-path)",
   },
 ];
 
