@@ -95,6 +95,58 @@ describe("Workspace Configs", () => {
   });
 });
 
+describe("Workspace Tool Allowlists", () => {
+  it("all allowlist entries are non-empty and have no whitespace", () => {
+    for (const ws of demoWorkspaces) {
+      if (!ws.toolAllowlist) continue;
+      for (const tool of ws.toolAllowlist) {
+        expect(tool).toBeTruthy();
+        expect(tool).not.toMatch(/\s/);
+      }
+    }
+  });
+
+  it("workspaces with an allowlist scope down to at least two tools", () => {
+    for (const ws of demoWorkspaces) {
+      if (ws.toolAllowlist) {
+        expect(ws.toolAllowlist.length).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it("allowlist entries reference tools the workspace skills depend on", () => {
+    const skillTools = new Map(
+      demoSKills.map((s) => [
+        s.name,
+        new Set(s.tools),
+      ] as [string, Set<string>])
+    );
+
+    for (const ws of demoWorkspaces) {
+      if (!ws.toolAllowlist) continue;
+      const allowed = new Set(ws.toolAllowlist);
+      for (const skillName of ws.skills) {
+        const required = skillTools.get(skillName);
+        if (!required) continue;
+        for (const tool of required) {
+          expect(allowed.has(tool)).toBe(true);
+        }
+      }
+    }
+  });
+
+  it("no workspace allowlists tools it can never invoke (sanity check)", () => {
+    const allKnownTools = new Set(demoSKills.flatMap((s) => s.tools));
+    allKnownTools.add("terminal");
+    for (const ws of demoWorkspaces) {
+      if (!ws.toolAllowlist) continue;
+      for (const tool of ws.toolAllowlist) {
+        expect(allKnownTools.has(tool)).toBe(true);
+      }
+    }
+  });
+});
+
 describe("Agent Profiles", () => {
   it("all profiles have valid temperature range", () => {
     for (const p of demoProfiles) {

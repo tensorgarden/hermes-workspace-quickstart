@@ -7,6 +7,7 @@ export interface WorkspaceConfig {
   memory: boolean;
   cron: string[];
   plugins: string[];
+  toolAllowlist?: string[];
 }
 
 export interface SkillDefinition {

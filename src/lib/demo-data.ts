@@ -90,6 +90,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     memory: true,
     cron: ["*/30 * * * * review open PRs"],
     plugins: ["git", "github"],
+    toolAllowlist: ["terminal", "read_file", "search_files", "patch", "write_file"],
   },
   {
     name: "Productivity Hub",
@@ -100,6 +101,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     memory: true,
     cron: ["0 9 * * 1-5 generate standup"],
     plugins: ["slack", "notion"],
+    toolAllowlist: ["terminal", "search_files", "read_file"],
   },
   {
     name: "Data Pipeline Runner",
@@ -110,6 +112,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     memory: false,
     cron: ["0 */6 * * * run pipeline"],
     plugins: ["postgres", "duckdb"],
+    toolAllowlist: ["terminal", "read_file", "write_file"],
   },
 ];
 
