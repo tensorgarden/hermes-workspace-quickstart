@@ -80,6 +80,30 @@ export const demoSKills: SkillDefinition[] = [
   },
 ];
 
+const workspaceSafetyBaseline = [
+  {
+    title: "Workspace-scoped writes",
+    description:
+      "Allow writes only inside the active workspace; shell dotfiles, global configs, and agent config files stay human-owned.",
+    evidence:
+      "Mitigates indirect prompt-injection paths that persist through shell startup files or agent settings.",
+  },
+  {
+    title: "Network egress review",
+    description:
+      "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",
+    evidence:
+      "Reduces exfiltration risk when an agent follows untrusted repository, MCP, or tool output instructions.",
+  },
+  {
+    title: "Runtime audit trail",
+    description:
+      "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, and approval reason.",
+    evidence:
+      "Gives teams replayable accountability for policy decisions across autonomous workspace runs.",
+  },
+] satisfies WorkspaceConfig["safetyControls"];
+
 export const demoWorkspaces: WorkspaceConfig[] = [
   {
     name: "Engineering Assistant",
@@ -91,6 +115,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["*/30 * * * * review open PRs"],
     plugins: ["git", "github"],
     toolAllowlist: ["terminal", "read_file", "search_files", "patch", "write_file"],
+    safetyControls: workspaceSafetyBaseline,
   },
   {
     name: "Productivity Hub",
@@ -102,6 +127,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["0 9 * * 1-5 generate standup"],
     plugins: ["slack", "notion"],
     toolAllowlist: ["terminal", "search_files", "read_file"],
+    safetyControls: workspaceSafetyBaseline,
   },
   {
     name: "Data Pipeline Runner",
@@ -113,6 +139,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["0 */6 * * * run pipeline"],
     plugins: ["postgres", "duckdb"],
     toolAllowlist: ["terminal", "read_file", "write_file"],
+    safetyControls: workspaceSafetyBaseline,
   },
 ];
 

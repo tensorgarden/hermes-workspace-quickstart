@@ -93,6 +93,23 @@ describe("Workspace Configs", () => {
       expect(ws.skills.length).toBeGreaterThan(0);
     }
   });
+
+  it("all workspaces document runtime safety controls", () => {
+    for (const ws of demoWorkspaces) {
+      expect(ws.safetyControls.length).toBeGreaterThanOrEqual(3);
+      const narrative = ws.safetyControls
+        .flatMap((control) => [
+          control.title,
+          control.description,
+          control.evidence,
+        ])
+        .join(" ");
+
+      expect(narrative).toMatch(/workspace|write/i);
+      expect(narrative).toMatch(/network|egress|outbound/i);
+      expect(narrative).toMatch(/audit|delegated|policy|approval/i);
+    }
+  });
 });
 
 describe("Workspace Tool Allowlists", () => {

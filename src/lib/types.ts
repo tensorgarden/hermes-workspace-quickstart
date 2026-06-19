@@ -1,3 +1,9 @@
+export interface WorkspaceSafetyControl {
+  title: string;
+  description: string;
+  evidence: string;
+}
+
 export interface WorkspaceConfig {
   name: string;
   description: string;
@@ -8,6 +14,7 @@ export interface WorkspaceConfig {
   cron: string[];
   plugins: string[];
   toolAllowlist?: string[];
+  safetyControls: WorkspaceSafetyControl[];
 }
 
 export interface SkillDefinition {

@@ -305,6 +305,21 @@ providers:
                     ))}
                   </div>
                 )}
+                <div className="mt-4 rounded-lg border border-emerald-100 bg-white/70 p-3">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                    Safety controls
+                  </div>
+                  <ul className="mt-2 space-y-2 text-xs text-slate-600">
+                    {ws.safetyControls.map((control) => (
+                      <li key={control.title}>
+                        <span className="font-semibold text-ink">
+                          {control.title}:
+                        </span>{" "}
+                        {control.description}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
