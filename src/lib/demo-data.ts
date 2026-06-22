@@ -87,6 +87,7 @@ const workspaceSafetyBaseline = [
       "Allow writes only inside the active workspace; shell dotfiles, global configs, and agent config files stay human-owned.",
     evidence:
       "Mitigates indirect prompt-injection paths that persist through shell startup files or agent settings.",
+    auditSignals: ["agent-tool-call", "team-project-attribution"],
   },
   {
     title: "Network egress review",
@@ -94,6 +95,7 @@ const workspaceSafetyBaseline = [
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",
     evidence:
       "Reduces exfiltration risk when an agent follows untrusted repository, MCP, or tool output instructions.",
+    auditSignals: ["network-request", "team-project-attribution"],
   },
   {
     title: "Runtime audit trail",
@@ -101,6 +103,12 @@ const workspaceSafetyBaseline = [
       "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, and approval reason.",
     evidence:
       "Gives teams replayable accountability for policy decisions across autonomous workspace runs.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "network-request",
+      "team-project-attribution",
+    ],
   },
 ] satisfies WorkspaceConfig["safetyControls"];
 

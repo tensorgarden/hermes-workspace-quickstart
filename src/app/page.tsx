@@ -316,6 +316,16 @@ providers:
                           {control.title}:
                         </span>{" "}
                         {control.description}
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {control.auditSignals.map((signal) => (
+                            <span
+                              key={signal}
+                              className="rounded bg-emerald-50 px-1.5 py-0.5 text-[11px] font-medium text-emerald-700 ring-1 ring-emerald-100"
+                            >
+                              {signal.split("-").join(" ")}
+                            </span>
+                          ))}
+                        </div>
                       </li>
                     ))}
                   </ul>

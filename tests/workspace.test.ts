@@ -5,6 +5,7 @@ import {
   demoWorkspaces,
   demoProfiles,
 } from "../src/lib/demo-data";
+import type { AuditSignal } from "../src/lib/types";
 
 describe("Provider Configs", () => {
   it("all providers have required fields", () => {
@@ -108,6 +109,25 @@ describe("Workspace Configs", () => {
       expect(narrative).toMatch(/workspace|write/i);
       expect(narrative).toMatch(/network|egress|outbound/i);
       expect(narrative).toMatch(/audit|delegated|policy|approval/i);
+    }
+  });
+
+  it("safety controls cover prompts, tool calls, network activity, and attribution", () => {
+    const requiredSignals: AuditSignal[] = [
+      "developer-prompt",
+      "agent-tool-call",
+      "network-request",
+      "team-project-attribution",
+    ];
+
+    for (const ws of demoWorkspaces) {
+      const signals = new Set(
+        ws.safetyControls.flatMap((control) => control.auditSignals)
+      );
+
+      for (const signal of requiredSignals) {
+        expect(signals.has(signal)).toBe(true);
+      }
     }
   });
 });
