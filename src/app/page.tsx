@@ -330,6 +330,28 @@ providers:
                     ))}
                   </ul>
                 </div>
+                <div className="mt-3 rounded-lg border border-sky-100 bg-sky-50/70 p-3">
+                  <div className="text-xs font-semibold uppercase tracking-wide text-sky-700">
+                    Network egress allowlist
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {ws.networkEgressPolicy.allowedDestinations.map((destination) => (
+                      <span
+                        key={destination}
+                        className="rounded bg-white px-1.5 py-0.5 text-[11px] font-medium text-sky-700 ring-1 ring-sky-100"
+                      >
+                        {destination}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-2 text-xs text-slate-600">
+                    <span className="font-semibold text-ink">Review before:</span>{" "}
+                    {ws.networkEgressPolicy.reviewTriggers.join(", ")}
+                  </div>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {ws.networkEgressPolicy.evidence}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

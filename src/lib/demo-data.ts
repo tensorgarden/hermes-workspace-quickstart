@@ -112,6 +112,39 @@ const workspaceSafetyBaseline = [
   },
 ] satisfies WorkspaceConfig["safetyControls"];
 
+const workspaceEgressPolicies = {
+  engineering: {
+    allowedDestinations: ["localhost:11434", "github.com", "api.github.com"],
+    reviewTriggers: [
+      "new git remotes",
+      "package registries outside the approved mirror",
+      "external webhook targets",
+    ],
+    evidence:
+      "Repository automation can read proprietary source, so every outbound host is explicit and new destinations route through review before the agent can connect.",
+  },
+  productivity: {
+    allowedDestinations: ["localhost:1234", "slack.com", "api.notion.com"],
+    reviewTriggers: [
+      "new SaaS connectors",
+      "public webhook URLs",
+      "exports that include meeting notes or customer names",
+    ],
+    evidence:
+      "Meeting and Slack summaries often contain sensitive context; connector egress is visible before data leaves the workspace.",
+  },
+  dataPipeline: {
+    allowedDestinations: ["localhost:11434", "postgres.internal", "duckdb-local-file"],
+    reviewTriggers: [
+      "new database hosts",
+      "cloud object storage buckets",
+      "vendor API exports",
+    ],
+    evidence:
+      "ETL agents can move bulk data quickly, so database and export destinations are declared separately from generic terminal access.",
+  },
+} satisfies Record<string, WorkspaceConfig["networkEgressPolicy"]>;
+
 export const demoWorkspaces: WorkspaceConfig[] = [
   {
     name: "Engineering Assistant",
@@ -123,6 +156,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["*/30 * * * * review open PRs"],
     plugins: ["git", "github"],
     toolAllowlist: ["terminal", "read_file", "search_files", "patch", "write_file"],
+    networkEgressPolicy: workspaceEgressPolicies.engineering,
     safetyControls: workspaceSafetyBaseline,
   },
   {
@@ -135,6 +169,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["0 9 * * 1-5 generate standup"],
     plugins: ["slack", "notion"],
     toolAllowlist: ["terminal", "search_files", "read_file"],
+    networkEgressPolicy: workspaceEgressPolicies.productivity,
     safetyControls: workspaceSafetyBaseline,
   },
   {
@@ -147,6 +182,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     cron: ["0 */6 * * * run pipeline"],
     plugins: ["postgres", "duckdb"],
     toolAllowlist: ["terminal", "read_file", "write_file"],
+    networkEgressPolicy: workspaceEgressPolicies.dataPipeline,
     safetyControls: workspaceSafetyBaseline,
   },
 ];

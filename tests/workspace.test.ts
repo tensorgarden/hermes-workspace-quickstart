@@ -130,6 +130,23 @@ describe("Workspace Configs", () => {
       }
     }
   });
+
+  it("documents explicit network egress review gates for every workspace", () => {
+    for (const ws of demoWorkspaces) {
+      expect(ws.networkEgressPolicy.allowedDestinations.length).toBeGreaterThan(0);
+      expect(ws.networkEgressPolicy.reviewTriggers.length).toBeGreaterThan(0);
+      expect(ws.networkEgressPolicy.evidence).toMatch(/egress|outbound|connect|destination|export/i);
+
+      for (const destination of ws.networkEgressPolicy.allowedDestinations) {
+        expect(destination).toBeTruthy();
+        expect(destination).not.toMatch(/\*|0\.0\.0\.0\/0|anywhere/i);
+      }
+
+      for (const trigger of ws.networkEgressPolicy.reviewTriggers) {
+        expect(trigger).toMatch(/new|external|export|outside|cloud|public|vendor/i);
+      }
+    }
+  });
 });
 
 describe("Workspace Tool Allowlists", () => {

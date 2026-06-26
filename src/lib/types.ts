@@ -11,6 +11,12 @@ export interface WorkspaceSafetyControl {
   auditSignals: AuditSignal[];
 }
 
+export interface NetworkEgressPolicy {
+  allowedDestinations: string[];
+  reviewTriggers: string[];
+  evidence: string;
+}
+
 export interface WorkspaceConfig {
   name: string;
   description: string;
@@ -21,6 +27,7 @@ export interface WorkspaceConfig {
   cron: string[];
   plugins: string[];
   toolAllowlist?: string[];
+  networkEgressPolicy: NetworkEgressPolicy;
   safetyControls: WorkspaceSafetyControl[];
 }
 
