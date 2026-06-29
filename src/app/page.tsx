@@ -316,6 +316,9 @@ providers:
                           {control.title}:
                         </span>{" "}
                         {control.description}
+                        <div className="mt-1 text-slate-500">
+                          {control.evidence}
+                        </div>
                         <div className="mt-1 flex flex-wrap gap-1">
                           {control.auditSignals.map((signal) => (
                             <span

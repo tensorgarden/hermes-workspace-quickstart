@@ -117,6 +117,7 @@ describe("Workspace Configs", () => {
       "developer-prompt",
       "agent-tool-call",
       "network-request",
+      "untrusted-source",
       "team-project-attribution",
     ];
 
@@ -128,6 +129,25 @@ describe("Workspace Configs", () => {
       for (const signal of requiredSignals) {
         expect(signals.has(signal)).toBe(true);
       }
+    }
+  });
+
+  it("keeps untrusted prompt sources from choosing outbound actions", () => {
+    for (const ws of demoWorkspaces) {
+      const signals = new Set(
+        ws.safetyControls.flatMap((control) => control.auditSignals)
+      );
+      const narrative = ws.safetyControls
+        .flatMap((control) => [
+          control.title,
+          control.description,
+          control.evidence,
+        ])
+        .join(" ");
+
+      expect(signals.has("untrusted-source")).toBe(true);
+      expect(narrative).toMatch(/untrusted|prompt-injection|MCP|tool output/i);
+      expect(narrative).toMatch(/commands|remotes|webhook|outbound|egress/i);
     }
   });
 

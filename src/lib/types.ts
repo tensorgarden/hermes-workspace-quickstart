@@ -2,6 +2,7 @@ export type AuditSignal =
   | "developer-prompt"
   | "agent-tool-call"
   | "network-request"
+  | "untrusted-source"
   | "team-project-attribution";
 
 export interface WorkspaceSafetyControl {
