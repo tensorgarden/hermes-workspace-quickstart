@@ -151,6 +151,23 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("keeps private data, untrusted context, and external communications separated until review", () => {
+    for (const ws of demoWorkspaces) {
+      const narrative = ws.safetyControls
+        .flatMap((control) => [
+          control.title,
+          control.description,
+          control.evidence,
+        ])
+        .join(" ");
+
+      expect(narrative).toMatch(/private (code|data)|meeting notes|customer data/i);
+      expect(narrative).toMatch(/untrusted/i);
+      expect(narrative).toMatch(/external|export|egress/i);
+      expect(narrative).toMatch(/approval|review/i);
+    }
+  });
+
   it("documents explicit network egress review gates for every workspace", () => {
     for (const ws of demoWorkspaces) {
       expect(ws.networkEgressPolicy.allowedDestinations.length).toBeGreaterThan(0);

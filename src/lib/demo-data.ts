@@ -106,6 +106,19 @@ const workspaceSafetyBaseline = [
     auditSignals: ["developer-prompt", "agent-tool-call", "network-request", "untrusted-source"],
   },
   {
+    title: "Private-data egress boundary",
+    description:
+      "When a workspace holds private code, meeting notes, or customer data and also reads untrusted content, any external message or export must show the data class and approval state before it leaves.",
+    evidence:
+      "Addresses the agentic risk pattern where private data, untrusted prompt content, and external communication combine into an exfiltration path.",
+    auditSignals: [
+      "agent-tool-call",
+      "network-request",
+      "untrusted-source",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Runtime audit trail",
     description:
       "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, and approval reason.",
