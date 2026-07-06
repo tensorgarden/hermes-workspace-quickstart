@@ -15,6 +15,9 @@ export interface WorkspaceSafetyControl {
 export interface NetworkEgressPolicy {
   allowedDestinations: string[];
   reviewTriggers: string[];
+  approvalOwner: string;
+  approvalRequiredFor: string[];
+  reviewSlaHours: number;
   evidence: string;
 }
 

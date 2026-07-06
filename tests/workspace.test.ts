@@ -184,6 +184,23 @@ describe("Workspace Configs", () => {
       }
     }
   });
+
+  it("requires named approval ownership before sensitive egress changes", () => {
+    for (const ws of demoWorkspaces) {
+      expect(ws.networkEgressPolicy.approvalOwner).toMatch(/\S/);
+      expect(ws.networkEgressPolicy.approvalRequiredFor.length).toBeGreaterThan(0);
+      expect(ws.networkEgressPolicy.reviewSlaHours).toBeGreaterThan(0);
+      expect(ws.networkEgressPolicy.reviewSlaHours).toBeLessThanOrEqual(24);
+
+      const approvalNarrative = [
+        ws.networkEgressPolicy.approvalOwner,
+        ...ws.networkEgressPolicy.approvalRequiredFor,
+      ].join(" ");
+
+      expect(approvalNarrative).toMatch(/lead|owner|steward/i);
+      expect(approvalNarrative).toMatch(/new|external|export|cloud|vendor|database|webhook/i);
+    }
+  });
 });
 
 describe("Workspace Tool Allowlists", () => {

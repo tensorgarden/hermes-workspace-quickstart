@@ -141,6 +141,14 @@ const workspaceEgressPolicies = {
       "package registries outside the approved mirror",
       "external webhook targets",
     ],
+    approvalOwner: "Platform engineering lead",
+    approvalRequiredFor: [
+      "new git remotes",
+      "package registries outside the approved mirror",
+      "external webhook targets",
+      "exports that include private source snippets",
+    ],
+    reviewSlaHours: 4,
     evidence:
       "Repository automation can read proprietary source, so every outbound host is explicit and new destinations route through review before the agent can connect.",
   },
@@ -151,6 +159,13 @@ const workspaceEgressPolicies = {
       "public webhook URLs",
       "exports that include meeting notes or customer names",
     ],
+    approvalOwner: "Product operations owner",
+    approvalRequiredFor: [
+      "new SaaS connectors",
+      "public webhook URLs",
+      "exports that include meeting notes or customer names",
+    ],
+    reviewSlaHours: 8,
     evidence:
       "Meeting and Slack summaries often contain sensitive context; connector egress is visible before data leaves the workspace.",
   },
@@ -161,6 +176,14 @@ const workspaceEgressPolicies = {
       "cloud object storage buckets",
       "vendor API exports",
     ],
+    approvalOwner: "Data platform steward",
+    approvalRequiredFor: [
+      "new database hosts",
+      "cloud object storage buckets",
+      "vendor API exports",
+      "bulk exports containing customer or operational data",
+    ],
+    reviewSlaHours: 4,
     evidence:
       "ETL agents can move bulk data quickly, so database and export destinations are declared separately from generic terminal access.",
   },

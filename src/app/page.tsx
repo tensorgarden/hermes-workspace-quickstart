@@ -351,6 +351,15 @@ providers:
                     <span className="font-semibold text-ink">Review before:</span>{" "}
                     {ws.networkEgressPolicy.reviewTriggers.join(", ")}
                   </div>
+                  <div className="mt-1 text-xs text-slate-600">
+                    <span className="font-semibold text-ink">Approval owner:</span>{" "}
+                    {ws.networkEgressPolicy.approvalOwner} within{" "}
+                    {ws.networkEgressPolicy.reviewSlaHours}h
+                  </div>
+                  <div className="mt-1 text-xs text-slate-600">
+                    <span className="font-semibold text-ink">Approval required for:</span>{" "}
+                    {ws.networkEgressPolicy.approvalRequiredFor.join(", ")}
+                  </div>
                   <p className="mt-1 text-xs text-slate-500">
                     {ws.networkEgressPolicy.evidence}
                   </p>
