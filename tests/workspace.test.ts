@@ -119,6 +119,7 @@ describe("Workspace Configs", () => {
       "network-request",
       "untrusted-source",
       "team-project-attribution",
+      "credential-access",
     ];
 
     for (const ws of demoWorkspaces) {
@@ -148,6 +149,26 @@ describe("Workspace Configs", () => {
       expect(signals.has("untrusted-source")).toBe(true);
       expect(narrative).toMatch(/untrusted|prompt-injection|MCP|tool output/i);
       expect(narrative).toMatch(/commands|remotes|webhook|outbound|egress/i);
+    }
+  });
+
+  it("documents credential inheritance review before agents can read secrets", () => {
+    for (const ws of demoWorkspaces) {
+      const signals = new Set(
+        ws.safetyControls.flatMap((control) => control.auditSignals)
+      );
+      const narrative = ws.safetyControls
+        .flatMap((control) => [
+          control.title,
+          control.description,
+          control.evidence,
+        ])
+        .join(" ");
+
+      expect(signals.has("credential-access")).toBe(true);
+      expect(narrative).toMatch(/credential|secret|token|cloud key|SSH key/i);
+      expect(narrative).toMatch(/block|review|approval|human-approved/i);
+      expect(narrative).toMatch(/inherit|separate agent identity|deployment credential/i);
     }
   });
 

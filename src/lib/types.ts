@@ -3,7 +3,8 @@ export type AuditSignal =
   | "agent-tool-call"
   | "network-request"
   | "untrusted-source"
-  | "team-project-attribution";
+  | "team-project-attribution"
+  | "credential-access";
 
 export interface WorkspaceSafetyControl {
   title: string;

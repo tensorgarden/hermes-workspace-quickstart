@@ -90,6 +90,19 @@ const workspaceSafetyBaseline = [
     auditSignals: ["agent-tool-call", "team-project-attribution"],
   },
   {
+    title: "Credential access review",
+    description:
+      "Block ambient credential reads such as env dumps, shell history, SSH keys, CI tokens, and cloud profiles unless the run documents the secret class and human-approved need.",
+    evidence:
+      "Addresses the agent-security failure mode where coding agents inherit user cloud keys, repository tokens, and deployment credentials without a separate agent identity.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "credential-access",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",
