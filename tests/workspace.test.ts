@@ -172,6 +172,20 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("blocks symlink writes that resolve outside the workspace boundary", () => {
+    for (const ws of demoWorkspaces) {
+      const pathControl = ws.safetyControls.find((control) =>
+        /symlink|canonical path/i.test(`${control.title} ${control.description}`)
+      );
+
+      expect(pathControl).toBeDefined();
+      expect(pathControl?.auditSignals).toContain("canonical-path-check");
+      expect(pathControl?.description).toMatch(/resolve|canonical|real path/i);
+      expect(pathControl?.description).toMatch(/outside|workspace boundary/i);
+      expect(pathControl?.evidence).toMatch(/true target|approval|consent/i);
+    }
+  });
+
   it("keeps private data, untrusted context, and external communications separated until review", () => {
     for (const ws of demoWorkspaces) {
       const narrative = ws.safetyControls

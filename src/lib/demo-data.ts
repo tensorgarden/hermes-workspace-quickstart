@@ -90,6 +90,18 @@ const workspaceSafetyBaseline = [
     auditSignals: ["agent-tool-call", "team-project-attribution"],
   },
   {
+    title: "Canonical path containment",
+    description:
+      "Resolve each write target to its canonical path and block symlinks or path traversal that point outside the active workspace boundary.",
+    evidence:
+      "Prevents a local-looking approval from hiding the true external target, preserving informed consent before filesystem changes.",
+    auditSignals: [
+      "agent-tool-call",
+      "canonical-path-check",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Credential access review",
     description:
       "Block ambient credential reads such as env dumps, shell history, SSH keys, CI tokens, and cloud profiles unless the run documents the secret class and human-approved need.",

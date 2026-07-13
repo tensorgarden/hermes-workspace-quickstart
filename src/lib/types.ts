@@ -3,6 +3,7 @@ export type AuditSignal =
   | "agent-tool-call"
   | "network-request"
   | "untrusted-source"
+  | "canonical-path-check"
   | "team-project-attribution"
   | "credential-access";
 
