@@ -144,6 +144,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Persistent memory review",
+    description:
+      "Validate and sanitize untrusted content before a durable memory write; isolate memory by workspace and session, block secrets, and expire records unless a named owner approves retention.",
+    evidence:
+      "Limits memory poisoning so injected instructions or sensitive context cannot silently influence later agent runs.",
+    auditSignals: [
+      "developer-prompt",
+      "untrusted-source",
+      "credential-access",
+      "memory-write",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Runtime audit trail",
     description:
       "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, and approval reason.",

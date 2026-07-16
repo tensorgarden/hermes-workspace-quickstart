@@ -120,6 +120,7 @@ describe("Workspace Configs", () => {
       "untrusted-source",
       "team-project-attribution",
       "credential-access",
+      "memory-write",
     ];
 
     for (const ws of demoWorkspaces) {
@@ -200,6 +201,27 @@ describe("Workspace Configs", () => {
       expect(narrative).toMatch(/untrusted/i);
       expect(narrative).toMatch(/external|export|egress/i);
       expect(narrative).toMatch(/approval|review/i);
+    }
+  });
+
+  it("gates durable memory against poisoning and cross-session leakage", () => {
+    const memoryEnabledWorkspaces = demoWorkspaces.filter((ws) => ws.memory);
+
+    expect(memoryEnabledWorkspaces.length).toBeGreaterThan(0);
+    for (const ws of memoryEnabledWorkspaces) {
+      const memoryControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("memory-write")
+      );
+      const narrative = memoryControl
+        ? [memoryControl.title, memoryControl.description, memoryControl.evidence].join(" ")
+        : "";
+
+      expect(memoryControl).toBeDefined();
+      expect(narrative).toMatch(/validate|sanitize/i);
+      expect(narrative).toMatch(/isolate|workspace|session/i);
+      expect(narrative).toMatch(/secret|sensitive/i);
+      expect(narrative).toMatch(/expire|retention/i);
+      expect(narrative).toMatch(/owner|approve|review/i);
     }
   });
 

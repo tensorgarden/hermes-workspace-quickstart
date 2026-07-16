@@ -5,7 +5,8 @@ export type AuditSignal =
   | "untrusted-source"
   | "canonical-path-check"
   | "team-project-attribution"
-  | "credential-access";
+  | "credential-access"
+  | "memory-write";
 
 export interface WorkspaceSafetyControl {
   title: string;
