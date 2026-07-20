@@ -120,6 +120,7 @@ describe("Workspace Configs", () => {
       "untrusted-source",
       "team-project-attribution",
       "credential-access",
+      "action-approval",
       "memory-write",
     ];
 
@@ -150,6 +151,24 @@ describe("Workspace Configs", () => {
       expect(signals.has("untrusted-source")).toBe(true);
       expect(narrative).toMatch(/untrusted|prompt-injection|MCP|tool output/i);
       expect(narrative).toMatch(/commands|remotes|webhook|outbound|egress/i);
+    }
+  });
+
+  it("requires parameter-bound human approval for high-impact actions", () => {
+    for (const ws of demoWorkspaces) {
+      const approvalControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("action-approval")
+      );
+      const narrative = approvalControl
+        ? [approvalControl.title, approvalControl.description, approvalControl.evidence].join(" ")
+        : "";
+
+      expect(approvalControl).toBeDefined();
+      expect(narrative).toMatch(/destructive|irreversible|financial|administrative|externally visible/i);
+      expect(narrative).toMatch(/human|approve|approval/i);
+      expect(narrative).toMatch(/tool|target|parameter|scope/i);
+      expect(narrative).toMatch(/expire|replay/i);
+      expect(narrative).toMatch(/excessive agency|decision.*execution/i);
     }
   });
 

@@ -6,6 +6,7 @@ export type AuditSignal =
   | "canonical-path-check"
   | "team-project-attribution"
   | "credential-access"
+  | "action-approval"
   | "memory-write";
 
 export interface WorkspaceSafetyControl {

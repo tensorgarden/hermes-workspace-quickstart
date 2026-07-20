@@ -115,6 +115,19 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "High-impact action checkpoint",
+    description:
+      "Require a named human to approve the exact tool, target, and parameters for destructive, irreversible, financial, administrative, or externally visible actions; approvals expire and cannot be replayed after scope changes.",
+    evidence:
+      "Counters excessive agency by separating the model's decision from execution and preventing broad approvals from authorizing a different action.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "action-approval",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",
