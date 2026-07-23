@@ -128,6 +128,19 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Delegated execution boundary",
+    description:
+      "Give each delegated sub-agent only the minimum tools, data, and destinations required for its task; its authority cannot exceed the parent run or widen through a delegation chain.",
+    evidence:
+      "Prevents un-scoped privilege inheritance while preserving parent-child lineage when a manager agent hands work to a specialist.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "delegation-boundary",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",

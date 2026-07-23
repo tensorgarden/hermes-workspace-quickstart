@@ -277,6 +277,27 @@ describe("Workspace Configs", () => {
       expect(approvalNarrative).toMatch(/new|external|export|cloud|vendor|database|webhook/i);
     }
   });
+
+  it("prevents delegated agents from inheriting unscoped workspace privileges", () => {
+    for (const ws of demoWorkspaces) {
+      const delegationControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("delegation-boundary")
+      );
+      const narrative = delegationControl
+        ? [
+            delegationControl.title,
+            delegationControl.description,
+            delegationControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(delegationControl).toBeDefined();
+      expect(narrative).toMatch(/delegate|sub-agent/i);
+      expect(narrative).toMatch(/least privilege|minimum|no broader|inherit/i);
+      expect(narrative).toMatch(/parent|delegation chain|lineage/i);
+    }
+  });
+
 });
 
 describe("Workspace Tool Allowlists", () => {

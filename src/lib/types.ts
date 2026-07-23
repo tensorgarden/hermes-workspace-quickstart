@@ -7,6 +7,7 @@ export type AuditSignal =
   | "team-project-attribution"
   | "credential-access"
   | "action-approval"
+  | "delegation-boundary"
   | "memory-write";
 
 export interface WorkspaceSafetyControl {
