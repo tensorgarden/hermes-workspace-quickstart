@@ -121,6 +121,7 @@ describe("Workspace Configs", () => {
       "team-project-attribution",
       "credential-access",
       "action-approval",
+      "extension-install-review",
       "memory-write",
     ];
 
@@ -295,6 +296,28 @@ describe("Workspace Configs", () => {
       expect(narrative).toMatch(/delegate|sub-agent/i);
       expect(narrative).toMatch(/least privilege|minimum|no broader|inherit/i);
       expect(narrative).toMatch(/parent|delegation chain|lineage/i);
+    }
+  });
+
+  it("reviews skills and extensions before they can persist or widen authority", () => {
+    for (const ws of demoWorkspaces) {
+      const extensionControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("extension-install-review")
+      );
+      const narrative = extensionControl
+        ? [
+            extensionControl.title,
+            extensionControl.description,
+            extensionControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(extensionControl).toBeDefined();
+      expect(narrative).toMatch(/skill|plugin|hook|MCP/i);
+      expect(narrative).toMatch(/human-owned|named reviewer|review/i);
+      expect(narrative).toMatch(/publisher|pinned version/i);
+      expect(narrative).toMatch(/tool|network|destination|authority/i);
+      expect(narrative).toMatch(/persistent|supply-chain/i);
     }
   });
 

@@ -141,6 +141,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Extension installation review",
+    description:
+      "Keep skills, plugins, hooks, and MCP definitions human-owned; require a named reviewer to verify the publisher, pinned version, requested tools, and destination scope before installation or updates.",
+    evidence:
+      "Contains agent supply-chain risk by preventing untrusted workspace content from silently installing persistent code or widening tool and network authority.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "untrusted-source",
+      "extension-install-review",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",

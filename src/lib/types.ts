@@ -8,6 +8,7 @@ export type AuditSignal =
   | "credential-access"
   | "action-approval"
   | "delegation-boundary"
+  | "extension-install-review"
   | "memory-write";
 
 export interface WorkspaceSafetyControl {
