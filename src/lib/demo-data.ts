@@ -155,6 +155,22 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "MCP tool schema integrity",
+    description:
+      "Snapshot and hash each approved MCP server identity, tool name, description, input schema, and annotation; block calls and require named re-review when the tool list or schema drifts.",
+    evidence:
+      "Contains tool poisoning, schema poisoning, tool shadowing, and rug-pull updates so model-controlled tools cannot silently change after approval.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "untrusted-source",
+      "tool-schema-integrity",
+      "extension-install-review",
+      "action-approval",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",

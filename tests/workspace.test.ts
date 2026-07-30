@@ -321,6 +321,38 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("blocks MCP tool schema drift until named re-review", () => {
+    for (const ws of demoWorkspaces) {
+      const schemaControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("tool-schema-integrity")
+      );
+      const narrative = schemaControl
+        ? [
+            schemaControl.title,
+            schemaControl.description,
+            schemaControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(schemaControl).toBeDefined();
+      expect(narrative).toMatch(/\bMCP\b/i);
+      expect(narrative).toMatch(/server identity/i);
+      expect(narrative).toMatch(/tool name/i);
+      expect(narrative).toMatch(/description/i);
+      expect(narrative).toMatch(/input schema/i);
+      expect(narrative).toMatch(/annotation/i);
+      expect(narrative).toMatch(/snapshot/i);
+      expect(narrative).toMatch(/hash/i);
+      expect(narrative).toMatch(/\bblock(?:s|ed|ing)?\b/i);
+      expect(narrative).toMatch(/\bdrift(?:s|ed|ing)?\b/i);
+      expect(narrative).toMatch(/named re-review/i);
+      expect(narrative).toMatch(/tool poisoning/i);
+      expect(narrative).toMatch(/schema poisoning/i);
+      expect(narrative).toMatch(/tool shadowing/i);
+      expect(narrative).toMatch(/rug[- ]?pull/i);
+    }
+  });
+
 });
 
 describe("Workspace Tool Allowlists", () => {
