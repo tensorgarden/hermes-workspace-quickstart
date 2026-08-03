@@ -122,6 +122,7 @@ describe("Workspace Configs", () => {
       "credential-access",
       "action-approval",
       "extension-install-review",
+      "tool-output-validation",
       "memory-write",
     ];
 
@@ -350,6 +351,30 @@ describe("Workspace Configs", () => {
       expect(narrative).toMatch(/schema poisoning/i);
       expect(narrative).toMatch(/tool shadowing/i);
       expect(narrative).toMatch(/rug[- ]?pull/i);
+    }
+  });
+
+  it("quarantines poisoned MCP output before it can trigger downstream action", () => {
+    for (const ws of demoWorkspaces) {
+      const outputControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("tool-output-validation")
+      );
+      const narrative = outputControl
+        ? [
+            outputControl.title,
+            outputControl.description,
+            outputControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(outputControl).toBeDefined();
+      expect(narrative).toMatch(/\bMCP\b/i);
+      expect(narrative).toMatch(/strict output schema/i);
+      expect(narrative).toMatch(/reject unexpected fields/i);
+      expect(narrative).toMatch(/quarantine/i);
+      expect(narrative).toMatch(/free-form instructions/i);
+      expect(narrative).toMatch(/downstream tool|external action/i);
+      expect(narrative).toMatch(/runtime tool-output poisoning/i);
     }
   });
 

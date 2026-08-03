@@ -171,6 +171,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "MCP tool output validation",
+    description:
+      "Validate MCP responses against a strict output schema, reject unexpected fields, and quarantine free-form instructions before any downstream tool or external action.",
+    evidence:
+      "Contains runtime tool-output poisoning that can bypass installation-time review when a trusted server returns hostile or structurally invalid data.",
+    auditSignals: [
+      "agent-tool-call",
+      "untrusted-source",
+      "tool-output-validation",
+      "action-approval",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",

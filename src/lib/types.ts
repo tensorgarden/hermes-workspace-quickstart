@@ -10,6 +10,7 @@ export type AuditSignal =
   | "delegation-boundary"
   | "extension-install-review"
   | "tool-schema-integrity"
+  | "tool-output-validation"
   | "memory-write";
 
 export interface WorkspaceSafetyControl {
