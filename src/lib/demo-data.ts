@@ -185,6 +185,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "MCP server exposure review",
+    description:
+      "Bind MCP servers to localhost or an authenticated private interface; block 0.0.0.0 and public-internet bindings, and deny requests toward link-local cloud metadata endpoints such as 169.254.169.254 or internal address ranges.",
+    evidence:
+      "Addresses the 2026 pattern of internet-exposed MCP servers running with no authentication and SSRF paths that turn one misconfigured server into cloud credential theft.",
+    auditSignals: [
+      "agent-tool-call",
+      "network-request",
+      "untrusted-source",
+      "mcp-server-exposure",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Network egress review",
     description:
       "Restrict outbound requests to known provider, repository, and service endpoints; require approval for new destinations.",

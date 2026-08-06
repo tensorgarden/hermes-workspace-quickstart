@@ -378,6 +378,28 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("keeps MCP servers bound, authenticated, and away from metadata SSRF paths", () => {
+    for (const ws of demoWorkspaces) {
+      const exposureControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("mcp-server-exposure")
+      );
+      const narrative = exposureControl
+        ? [
+            exposureControl.title,
+            exposureControl.description,
+            exposureControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(exposureControl).toBeDefined();
+      expect(narrative).toMatch(/\bMCP\b/i);
+      expect(narrative).toMatch(/localhost|private interface/i);
+      expect(narrative).toMatch(/authentication/i);
+      expect(narrative).toMatch(/0\.0\.0\.0|public/i);
+      expect(narrative).toMatch(/metadata|SSRF|169\.254/i);
+    }
+  });
+
 });
 
 describe("Workspace Tool Allowlists", () => {

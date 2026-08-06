@@ -11,6 +11,7 @@ export type AuditSignal =
   | "extension-install-review"
   | "tool-schema-integrity"
   | "tool-output-validation"
+  | "mcp-server-exposure"
   | "memory-write";
 
 export interface WorkspaceSafetyControl {
