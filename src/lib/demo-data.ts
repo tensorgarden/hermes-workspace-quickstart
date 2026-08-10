@@ -1,4 +1,4 @@
-import type { WorkspaceConfig, SkillDefinition, AgentProfile, ProviderConfig } from "./types";
+import type { WorkspaceConfig, SkillDefinition, AgentProfile, ProviderConfig, MCPServerConfig } from "./types";
 
 export const demoProviders: ProviderConfig[] = [
   {
@@ -39,6 +39,75 @@ export const demoProviders: ProviderConfig[] = [
       "Avoid logging environment dumps because crash reports can expose secrets.",
     ],
     setupCommand: "# Add OPENAI_API_KEY to $(hermes config env-path)",
+  },
+];
+
+export const demoMCPServers: MCPServerConfig[] = [
+  {
+    name: "Filesystem (built-in)",
+    type: "stdio",
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/documents"],
+    timeoutSeconds: 10,
+    tools: ["read_file", "write_file", "list_files"],
+    securityBoundary: "localhost",
+    errorRecovery: {
+      maxRetries: 3,
+      retryDelayMs: 500,
+      requiresManualRestart: false,
+    },
+    runtimeRequirements: ["node >= 18", "npx"],
+  },
+  {
+    name: "Web Browser Control",
+    type: "http",
+    command: "python -m mcp_browser_server",
+    environment: {
+      MCP_BROWSER_PORT: "8765",
+      MCP_BROWSER_HOST: "localhost",
+    },
+    timeoutSeconds: 30,
+    tools: ["navigate", "click", "type", "screenshot"],
+    securityBoundary: "localhost",
+    errorRecovery: {
+      maxRetries: 2,
+      retryDelayMs: 1000,
+      requiresManualRestart: false,
+    },
+    runtimeRequirements: ["python >= 3.10", "chrome or firefox"],
+  },
+  {
+    name: "Git Repository Tools",
+    type: "stdio",
+    command: "python",
+    args: ["-m", "mcp_git"],
+    timeoutSeconds: 15,
+    tools: ["list_branches", "show_diff", "commit"],
+    securityBoundary: "localhost",
+    errorRecovery: {
+      maxRetries: 2,
+      retryDelayMs: 500,
+      requiresManualRestart: false,
+    },
+    runtimeRequirements: ["python >= 3.10", "git"],
+  },
+  {
+    name: "Slack Integration (requires auth)",
+    type: "http",
+    command: "node slack-mcp-bridge.js",
+    environment: {
+      SLACK_BOT_TOKEN: "process.env.SLACK_TOKEN",
+      MCP_SLACK_PORT: "9000",
+    },
+    timeoutSeconds: 20,
+    tools: ["send_message", "list_channels", "get_thread"],
+    securityBoundary: "authenticated-private",
+    errorRecovery: {
+      maxRetries: 1,
+      retryDelayMs: 2000,
+      requiresManualRestart: true,
+    },
+    runtimeRequirements: ["node >= 18", "SLACK_TOKEN env var"],
   },
 ];
 

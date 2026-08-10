@@ -73,3 +73,20 @@ export interface ProviderConfig {
   securityNotes: string[];
   setupCommand: string;
 }
+
+export interface MCPServerConfig {
+  name: string;
+  type: "stdio" | "sse" | "http";
+  command: string;
+  args?: string[];
+  environment?: Record<string, string>;
+  timeoutSeconds: number;
+  tools: string[];
+  securityBoundary: "localhost" | "authenticated-private" | "public";
+  errorRecovery: {
+    maxRetries: number;
+    retryDelayMs: number;
+    requiresManualRestart: boolean;
+  };
+  runtimeRequirements?: string[];
+}

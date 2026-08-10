@@ -4,6 +4,7 @@ import {
   demoSKills,
   demoWorkspaces,
   demoProfiles,
+  demoMCPServers,
 } from "../src/lib/demo-data";
 import type { AuditSignal } from "../src/lib/types";
 
@@ -473,6 +474,104 @@ describe("Agent Profiles", () => {
     const allModels = new Set(demoProviders.flatMap((p) => p.models));
     for (const p of demoProfiles) {
       expect(allModels.has(p.model)).toBe(true);
+    }
+  });
+});
+
+describe("MCP Server Configs", () => {
+  it("all MCP servers have required fields", () => {
+    for (const mcp of demoMCPServers) {
+      expect(mcp.name).toBeTruthy();
+      expect(["stdio", "sse", "http"]).toContain(mcp.type);
+      expect(mcp.command).toBeTruthy();
+      expect(mcp.timeoutSeconds).toBeGreaterThan(0);
+      expect(mcp.tools.length).toBeGreaterThan(0);
+      expect(["localhost", "authenticated-private", "public"]).toContain(
+        mcp.securityBoundary
+      );
+      expect(mcp.errorRecovery).toBeDefined();
+      expect(mcp.errorRecovery.maxRetries).toBeGreaterThanOrEqual(0);
+      expect(mcp.errorRecovery.retryDelayMs).toBeGreaterThanOrEqual(0);
+      expect(typeof mcp.errorRecovery.requiresManualRestart).toBe("boolean");
+    }
+  });
+
+  it("MCP timeout values are reasonable (5s-60s range)", () => {
+    for (const mcp of demoMCPServers) {
+      expect(mcp.timeoutSeconds).toBeGreaterThanOrEqual(5);
+      expect(mcp.timeoutSeconds).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it("stdio-type servers include retry configuration for transient failures", () => {
+    const stdioServers = demoMCPServers.filter((mcp) => mcp.type === "stdio");
+    for (const mcp of stdioServers) {
+      expect(mcp.errorRecovery.maxRetries).toBeGreaterThan(0);
+      expect(mcp.errorRecovery.retryDelayMs).toBeGreaterThan(0);
+    }
+  });
+
+  it("public-boundary or authenticated-private servers document runtime requirements", () => {
+    const restrictedServers = demoMCPServers.filter(
+      (mcp) =>
+        mcp.securityBoundary === "public" ||
+        mcp.securityBoundary === "authenticated-private"
+    );
+    for (const mcp of restrictedServers) {
+      expect(mcp.runtimeRequirements).toBeDefined();
+      expect(mcp.runtimeRequirements!.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("authenticated-private servers document environment variables or auth tokens", () => {
+    const authServers = demoMCPServers.filter(
+      (mcp) => mcp.securityBoundary === "authenticated-private"
+    );
+    for (const mcp of authServers) {
+      const narrative = [
+        mcp.name,
+        mcp.command,
+        ...(mcp.runtimeRequirements || []),
+      ].join(" ");
+      expect(narrative).toMatch(/token|auth|credential|env|secret/i);
+    }
+  });
+
+  it("all MCP server tools are non-empty strings", () => {
+    for (const mcp of demoMCPServers) {
+      for (const tool of mcp.tools) {
+        expect(tool).toBeTruthy();
+        expect(typeof tool).toBe("string");
+      }
+    }
+  });
+
+  it("servers with requiresManualRestart=true have justification in name/command", () => {
+    const manualRestartServers = demoMCPServers.filter(
+      (mcp) => mcp.errorRecovery.requiresManualRestart
+    );
+    for (const mcp of manualRestartServers) {
+      const narrative = [mcp.name, mcp.command, mcp.runtimeRequirements || []].join(
+        " "
+      );
+      expect(narrative).toMatch(
+        /slack|webhook|integration|external|stateful|long.?lived/i
+      );
+    }
+  });
+
+  it("HTTP-type servers bind only to localhost or authenticated interfaces", () => {
+    const httpServers = demoMCPServers.filter((mcp) => mcp.type === "http");
+    for (const mcp of httpServers) {
+      if (mcp.environment && mcp.environment.MCP_BROWSER_HOST) {
+        expect(mcp.environment.MCP_BROWSER_HOST).toBe("localhost");
+      }
+      if (
+        mcp.environment &&
+        (mcp.environment.MCP_SLACK_PORT || mcp.environment.MCP_BROWSER_PORT)
+      ) {
+        expect(mcp.securityBoundary).not.toBe("public");
+      }
     }
   });
 });
