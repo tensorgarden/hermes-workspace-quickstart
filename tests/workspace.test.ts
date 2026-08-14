@@ -443,6 +443,29 @@ describe("Workspace Tool Allowlists", () => {
     }
   });
 
+  it("allowlists stay minimal: no tool is allowed unless a selected skill requires it", () => {
+    const skillTools = new Map(
+      demoSKills.map((s) => [
+        s.name,
+        new Set(s.tools),
+      ] as [string, Set<string>])
+    );
+
+    for (const ws of demoWorkspaces) {
+      if (!ws.toolAllowlist) continue;
+      const requiredBySelectedSkills = new Set<string>();
+      for (const skillName of ws.skills) {
+        const required = skillTools.get(skillName);
+        if (!required) continue;
+        for (const tool of required) requiredBySelectedSkills.add(tool);
+      }
+
+      for (const tool of ws.toolAllowlist) {
+        expect(requiredBySelectedSkills.has(tool)).toBe(true);
+      }
+    }
+  });
+
   it("no workspace allowlists tools it can never invoke (sanity check)", () => {
     const allKnownTools = new Set(demoSKills.flatMap((s) => s.tools));
     allKnownTools.add("terminal");

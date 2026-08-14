@@ -404,7 +404,7 @@ export const demoWorkspaces: WorkspaceConfig[] = [
     memory: true,
     cron: ["0 9 * * 1-5 generate standup"],
     plugins: ["slack", "notion"],
-    toolAllowlist: ["terminal", "search_files", "read_file"],
+    toolAllowlist: ["terminal", "search_files"],
     networkEgressPolicy: workspaceEgressPolicies.productivity,
     safetyControls: workspaceSafetyBaseline,
   },
