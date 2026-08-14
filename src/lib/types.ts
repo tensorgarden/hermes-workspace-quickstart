@@ -12,7 +12,8 @@ export type AuditSignal =
   | "tool-schema-integrity"
   | "tool-output-validation"
   | "mcp-server-exposure"
-  | "memory-write";
+  | "memory-write"
+  | "audit-log-integrity";
 
 export interface WorkspaceSafetyControl {
   title: string;

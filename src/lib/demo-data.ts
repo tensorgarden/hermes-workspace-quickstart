@@ -313,13 +313,14 @@ const workspaceSafetyBaseline = [
   {
     title: "Runtime audit trail",
     description:
-      "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, and approval reason.",
+      "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, approval state and reason, policy decision, and downstream result in append-only, tamper-evident logs.",
     evidence:
-      "Gives teams replayable accountability for policy decisions across autonomous workspace runs.",
+      "Gives teams replayable accountability for policy decisions across autonomous workspace runs and keeps post-incident forensics trustworthy when the agent's own account of a failure is in question.",
     auditSignals: [
       "developer-prompt",
       "agent-tool-call",
       "network-request",
+      "audit-log-integrity",
       "team-project-attribution",
     ],
   },

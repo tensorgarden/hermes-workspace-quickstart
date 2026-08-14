@@ -125,6 +125,7 @@ describe("Workspace Configs", () => {
       "extension-install-review",
       "tool-output-validation",
       "memory-write",
+      "audit-log-integrity",
     ];
 
     for (const ws of demoWorkspaces) {
@@ -223,6 +224,32 @@ describe("Workspace Configs", () => {
       expect(narrative).toMatch(/untrusted/i);
       expect(narrative).toMatch(/external|export|egress/i);
       expect(narrative).toMatch(/approval|review/i);
+    }
+  });
+
+  it("keeps runtime audit trails append-only and tied to policy decisions", () => {
+    for (const ws of demoWorkspaces) {
+      const auditControl = ws.safetyControls.find((control) =>
+        /runtime audit/i.test(control.title)
+      );
+
+      expect(auditControl).toBeDefined();
+      const narrative = auditControl
+        ? [
+            auditControl.title,
+            auditControl.description,
+            auditControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(auditControl?.auditSignals).toContain("audit-log-integrity");
+      expect(narrative).toMatch(/delegated user/i);
+      expect(narrative).toMatch(/requested scope/i);
+      expect(narrative).toMatch(/approval state|approval reason/i);
+      expect(narrative).toMatch(/policy decision/i);
+      expect(narrative).toMatch(/downstream result/i);
+      expect(narrative).toMatch(/append-only|tamper-evident|signed/i);
+      expect(narrative).toMatch(/forensic|replayable|incident/i);
     }
   });
 
