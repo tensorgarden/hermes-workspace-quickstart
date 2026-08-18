@@ -196,6 +196,23 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("rotates short-lived agent credentials instead of keeping long-lived config secrets", () => {
+    for (const ws of demoWorkspaces) {
+      const lifecycleControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("credential-lifecycle")
+      );
+      const narrative = lifecycleControl
+        ? [lifecycleControl.title, lifecycleControl.description, lifecycleControl.evidence].join(" ")
+        : "";
+
+      expect(lifecycleControl).toBeDefined();
+      expect(narrative).toMatch(/short-lived|just-in-time/i);
+      expect(narrative).toMatch(/expir|rotat|revok/i);
+      expect(narrative).toMatch(/long-lived|standing privilege|static/i);
+      expect(narrative).toMatch(/workspace|task|scope/i);
+    }
+  });
+
   it("blocks symlink writes that resolve outside the workspace boundary", () => {
     for (const ws of demoWorkspaces) {
       const pathControl = ws.safetyControls.find((control) =>

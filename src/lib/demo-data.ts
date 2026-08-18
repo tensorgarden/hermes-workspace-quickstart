@@ -184,6 +184,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Credential lifecycle and rotation",
+    description:
+      "Issue agents short-lived, just-in-time credentials scoped to a single workspace and task; enforce expiry, scheduled rotation, and revocation when a delegation ends, and forbid long-lived secrets from living in workspace config files.",
+    evidence:
+      "Follows the 2026 agentic-identity guidance on zero standing privilege, so a leaked API key or MCP token cannot outlive the job it authorized or become a permanent backdoor.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "credential-access",
+      "credential-lifecycle",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "High-impact action checkpoint",
     description:
       "Require a named human to approve the exact tool, target, and parameters for destructive, irreversible, financial, administrative, or externally visible actions; approvals expire and cannot be replayed after scope changes.",

@@ -6,6 +6,7 @@ export type AuditSignal =
   | "canonical-path-check"
   | "team-project-attribution"
   | "credential-access"
+  | "credential-lifecycle"
   | "action-approval"
   | "delegation-boundary"
   | "extension-install-review"
