@@ -319,6 +319,21 @@ providers:
                         <div className="mt-1 text-slate-500">
                           {control.evidence}
                         </div>
+                        {control.verification && (
+                          <div className="mt-1 text-slate-500">
+                            <span className="font-semibold text-ink">
+                              Integrity verification:
+                            </span>{" "}
+                            {control.verification.method.split("-").join(" ")} anchored at{" "}
+                            {control.verification.anchor};{" "}
+                            {control.verification.entries.filter(
+                              (entry) =>
+                                entry.expectedHash !== entry.observedHash ||
+                                entry.expectedPreviousHash !== entry.observedPreviousHash
+                            ).length}{" "}
+                            sample mismatch detected.
+                          </div>
+                        )}
                         <div className="mt-1 flex flex-wrap gap-1">
                           {control.auditSignals.map((signal) => (
                             <span

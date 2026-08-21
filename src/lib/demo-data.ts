@@ -1,4 +1,11 @@
-import type { WorkspaceConfig, SkillDefinition, AgentProfile, ProviderConfig, MCPServerConfig } from "./types";
+import type {
+  WorkspaceConfig,
+  SkillDefinition,
+  AgentProfile,
+  ProviderConfig,
+  MCPServerConfig,
+  AuditTrailVerification,
+} from "./types";
 
 export const demoProviders: ProviderConfig[] = [
   {
@@ -148,6 +155,27 @@ export const demoSKills: SkillDefinition[] = [
     triggers: ["generate docs", "update documentation", "docstrings"],
   },
 ];
+
+const runtimeAuditVerification: AuditTrailVerification = {
+  method: "sha-256-hash-chain",
+  anchor: "sha256:genesis",
+  entries: [
+    {
+      id: "audit-001",
+      expectedHash: "sha256:entry-001",
+      observedHash: "sha256:entry-001",
+      expectedPreviousHash: "sha256:genesis",
+      observedPreviousHash: "sha256:genesis",
+    },
+    {
+      id: "audit-002",
+      expectedHash: "sha256:entry-002",
+      observedHash: "sha256:entry-002-modified",
+      expectedPreviousHash: "sha256:entry-001",
+      observedPreviousHash: "sha256:entry-001",
+    },
+  ],
+};
 
 const workspaceSafetyBaseline = [
   {
@@ -329,7 +357,8 @@ const workspaceSafetyBaseline = [
     description:
       "Record sensitive terminal, patch, and external API actions with the delegated user, requested scope, approval state and reason, policy decision, and downstream result in append-only, tamper-evident logs.",
     evidence:
-      "Gives teams replayable accountability for policy decisions across autonomous workspace runs and keeps post-incident forensics trustworthy when the agent's own account of a failure is in question.",
+      "Gives teams replayable accountability for policy decisions across autonomous workspace runs and keeps post-incident forensics trustworthy when the agent's own account of a failure is in question. The verification fixture detects a hash mismatch before an incident review relies on the record.",
+    verification: runtimeAuditVerification,
     auditSignals: [
       "developer-prompt",
       "agent-tool-call",

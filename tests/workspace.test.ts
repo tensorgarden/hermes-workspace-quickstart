@@ -270,6 +270,30 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("proves audit-log tampering is detectable", () => {
+    for (const ws of demoWorkspaces) {
+      const auditControl = ws.safetyControls.find((control) =>
+        /runtime audit/i.test(control.title)
+      );
+      const verification = auditControl?.verification;
+
+      expect(verification).toBeDefined();
+      expect(verification?.method).toBe("sha-256-hash-chain");
+      expect(verification?.anchor).toMatch(/^sha256:/);
+      expect(verification?.entries).toHaveLength(2);
+
+      const tamperedEntries =
+        verification?.entries.filter(
+          (entry) =>
+            entry.expectedHash !== entry.observedHash ||
+            entry.expectedPreviousHash !== entry.observedPreviousHash
+        ) ?? [];
+
+      expect(tamperedEntries).toHaveLength(1);
+      expect(tamperedEntries[0].id).toBe("audit-002");
+    }
+  });
+
   it("gates durable memory against poisoning and cross-session leakage", () => {
     const memoryEnabledWorkspaces = demoWorkspaces.filter((ws) => ws.memory);
 

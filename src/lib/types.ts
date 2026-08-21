@@ -16,11 +16,26 @@ export type AuditSignal =
   | "memory-write"
   | "audit-log-integrity";
 
+export interface AuditTrailVerificationEntry {
+  id: string;
+  expectedHash: string;
+  observedHash: string;
+  expectedPreviousHash: string;
+  observedPreviousHash: string;
+}
+
+export interface AuditTrailVerification {
+  method: "sha-256-hash-chain";
+  anchor: string;
+  entries: AuditTrailVerificationEntry[];
+}
+
 export interface WorkspaceSafetyControl {
   title: string;
   description: string;
   evidence: string;
   auditSignals: AuditSignal[];
+  verification?: AuditTrailVerification;
 }
 
 export interface NetworkEgressPolicy {
