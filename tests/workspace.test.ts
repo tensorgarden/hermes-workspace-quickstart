@@ -665,4 +665,18 @@ describe("MCP Server Configs", () => {
       }
     }
   });
+
+  it("keeps stdio MCP commands free of shell interpolation", () => {
+    const shellSyntax = /(?:&&|\|\||[;&`$<>])/;
+    const stdioServers = demoMCPServers.filter((mcp) => mcp.type === "stdio");
+
+    expect(stdioServers.length).toBeGreaterThan(0);
+    for (const mcp of stdioServers) {
+      expect(mcp.command.trim().split(/\s+/)).toHaveLength(1);
+      expect(mcp.command).not.toMatch(shellSyntax);
+      for (const arg of mcp.args ?? []) {
+        expect(arg).not.toMatch(shellSyntax);
+      }
+    }
+  });
 });
