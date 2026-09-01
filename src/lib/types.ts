@@ -8,6 +8,7 @@ export type AuditSignal =
   | "credential-access"
   | "credential-lifecycle"
   | "action-approval"
+  | "intent-policy-gate"
   | "delegation-boundary"
   | "extension-install-review"
   | "tool-schema-integrity"

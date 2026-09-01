@@ -239,6 +239,21 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Pre-execution intent gate",
+    description:
+      "Treat the model's proposed action as untrusted; before execution, compare the requested tool and arguments with the original user intent, validate arguments against the tool schema, enforce rate and egress limits, and require a fresh review when intent or scope drifts.",
+    evidence:
+      "Addresses tool misuse where a legitimate tool is applied to an unsafe target or chained into an unintended action, even though the tool itself is allowlisted.",
+    auditSignals: [
+      "developer-prompt",
+      "agent-tool-call",
+      "action-approval",
+      "network-request",
+      "intent-policy-gate",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Delegated execution boundary",
     description:
       "Give each delegated sub-agent only the minimum tools, data, and destinations required for its task; its authority cannot exceed the parent run or widen through a delegation chain.",

@@ -122,6 +122,7 @@ describe("Workspace Configs", () => {
       "team-project-attribution",
       "credential-access",
       "action-approval",
+      "intent-policy-gate",
       "extension-install-review",
       "tool-output-validation",
       "memory-write",
@@ -469,6 +470,27 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("validates tool intent before execution", () => {
+    for (const ws of demoWorkspaces) {
+      const intentControl = ws.safetyControls.find((control) =>
+        /pre-execution intent gate/i.test(control.title)
+      );
+      const narrative = intentControl
+        ? [
+            intentControl.title,
+            intentControl.description,
+            intentControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(intentControl).toBeDefined();
+      expect(intentControl?.auditSignals).toContain("intent-policy-gate");
+      expect(narrative).toMatch(/original (user )?(task|intent)/i);
+      expect(narrative).toMatch(/schema|validate/i);
+      expect(narrative).toMatch(/rate|egress|limit/i);
+      expect(narrative).toMatch(/scope|drift/i);
+    }
+  });
 });
 
 describe("Workspace Tool Allowlists", () => {
