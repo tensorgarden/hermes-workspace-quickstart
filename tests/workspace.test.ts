@@ -448,6 +448,27 @@ describe("Workspace Configs", () => {
     }
   });
 
+  it("caps agent runs against denial-of-wallet loops", () => {
+    for (const ws of demoWorkspaces) {
+      const budgetControl = ws.safetyControls.find((control) =>
+        control.auditSignals.includes("execution-budget")
+      );
+      const narrative = budgetControl
+        ? [
+            budgetControl.title,
+            budgetControl.description,
+            budgetControl.evidence,
+          ].join(" ")
+        : "";
+
+      expect(budgetControl).toBeDefined();
+      expect(narrative).toMatch(/token|cost/i);
+      expect(narrative).toMatch(/retry|recursion|tool.?chain/i);
+      expect(narrative).toMatch(/limit|bound|budget/i);
+      expect(narrative).toMatch(/denial.?of.?wallet|unbounded|cascading.?failure/i);
+    }
+  });
+
   it("keeps MCP servers bound, authenticated, and away from metadata SSRF paths", () => {
     for (const ws of demoWorkspaces) {
       const exposureControl = ws.safetyControls.find((control) =>

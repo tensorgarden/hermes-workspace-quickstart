@@ -15,7 +15,8 @@ export type AuditSignal =
   | "tool-output-validation"
   | "mcp-server-exposure"
   | "memory-write"
-  | "audit-log-integrity";
+  | "audit-log-integrity"
+  | "execution-budget";
 
 export interface AuditTrailVerificationEntry {
   id: string;

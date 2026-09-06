@@ -254,6 +254,20 @@ const workspaceSafetyBaseline = [
     ],
   },
   {
+    title: "Execution budget and loop limits",
+    description:
+      "Bound each run by token, cost, retry, recursion, and tool-chain limits; stop or route to review when an agent approaches its budget instead of allowing unbounded loops or repeated downstream calls.",
+    evidence:
+      "Reduces denial-of-wallet and cascading-failure risk while keeping spend, retry volume, and delegated execution visible to the operator.",
+    auditSignals: [
+      "agent-tool-call",
+      "network-request",
+      "intent-policy-gate",
+      "execution-budget",
+      "team-project-attribution",
+    ],
+  },
+  {
     title: "Delegated execution boundary",
     description:
       "Give each delegated sub-agent only the minimum tools, data, and destinations required for its task; its authority cannot exceed the parent run or widen through a delegation chain.",
